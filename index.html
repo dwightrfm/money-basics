@@ -52,6 +52,25 @@ footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);color:v
 h2{font-size:clamp(30px,7vw,42px);font-weight:900;line-height:1.08;margin:14px 0 6px}
 .meta{color:var(--mut);font-size:15px;margin-bottom:18px}
 .row{display:flex;gap:10px;margin-top:16px}.row .btn{flex:1;margin:0;text-align:center;text-decoration:none}
+
+.list{display:flex;flex-direction:column;gap:12px;margin-top:30px;max-width:640px}
+.item{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.item.open{border-color:rgba(70,217,210,.55);box-shadow:0 0 0 1px rgba(70,217,210,.25),0 10px 30px rgba(0,0,0,.3)}
+.vbtn{appearance:none;width:100%;display:flex;align-items:center;gap:14px;background:none;border:0;color:var(--ink);
+font:800 18px Inter,sans-serif;text-align:left;padding:16px 16px;min-height:64px;cursor:pointer}
+.vbtn:hover .vtitle{color:var(--teal)}
+.vnum{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:15px;font-weight:800;
+background:rgba(70,217,210,.14);border:1px solid rgba(70,217,210,.45);color:var(--teal)}
+.vtitle{flex:1;line-height:1.25}
+.vlen{flex:none;color:var(--mut);font-size:14px;font-weight:700}
+.chev{flex:none;width:10px;height:10px;border-right:2.5px solid var(--mut);border-bottom:2.5px solid var(--mut);transform:rotate(45deg);margin:0 4px 4px 2px;transition:transform .2s}
+.open .chev{transform:rotate(-135deg);margin-bottom:-4px}
+.panel{padding:0 16px 16px;display:flex;flex-direction:column;align-items:center;gap:12px;animation:fadein .25s ease}
+.panel video{width:100%;max-width:380px;aspect-ratio:9/16;border-radius:16px;background:#000;display:block;border:1px solid var(--line)}
+.panel .btn{width:100%;max-width:380px;margin:0}
+.panel[hidden]{display:none}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.panel{animation:none}.chev{transition:none}}
 </style><script>
 function copyLink(url,btn){
   const done=()=>{const t=btn.textContent;btn.textContent='Link copied';btn.classList.add('ok');setTimeout(()=>{btn.textContent=t;btn.classList.remove('ok')},1800)};
@@ -59,67 +78,80 @@ function copyLink(url,btn){
 }
 function fallback(url,done){const a=document.createElement('textarea');a.value=url;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();
   try{document.execCommand('copy');done()}catch(e){prompt('Copy this link:',url)}a.remove()}
+
+function setOpen(item,on){
+  const b=item.querySelector('.vbtn'),p=item.querySelector('.panel'),v=p.querySelector('video');
+  item.classList.toggle('open',on);b.setAttribute('aria-expanded',on);p.hidden=!on;
+  if(on){if(!v.src)v.src=v.dataset.src;v.play().catch(()=>{})}else{v.pause()}
+}
+function toggle(btn){
+  const item=btn.closest('.item'),opening=!item.classList.contains('open');
+  const before=btn.getBoundingClientRect().top;
+  document.querySelectorAll('.item.open').forEach(o=>{if(o!==item)setOpen(o,false)});
+  setOpen(item,opening);
+  window.scrollBy(0,btn.getBoundingClientRect().top-before);
+}
 </script></head><body><div class="wrap"><div class="eyebrow"><span class="dot"></span>Money Basics</div>
 <h1>Money <em>Basics</em></h1>
-<p class="lead">15 short videos on how money works. Each one is under 3 minutes. Tap a video to watch, or copy its link to text it.</p>
-<div class="grid"><div class="card"><a class="thumb" href="01-start-saving-early/"><img src="01-start-saving-early/poster.jpg" alt="Start Saving Early" loading="lazy">
-<span class="num">#01</span><span class="play" aria-hidden="true"></span><span class="dur">2:05</span></a>
-<div class="body"><a class="title" href="01-start-saving-early/">Start Saving Early</a>
-<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/01-start-saving-early/',this)">Copy link</button></div></div>
-<div class="card"><a class="thumb" href="02-compound-interest/"><img src="02-compound-interest/poster.jpg" alt="Compound Interest" loading="lazy">
-<span class="num">#02</span><span class="play" aria-hidden="true"></span><span class="dur">2:01</span></a>
-<div class="body"><a class="title" href="02-compound-interest/">Compound Interest</a>
-<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/02-compound-interest/',this)">Copy link</button></div></div>
-<div class="card"><a class="thumb" href="03-inflation/"><img src="03-inflation/poster.jpg" alt="Inflation" loading="lazy">
-<span class="num">#03</span><span class="play" aria-hidden="true"></span><span class="dur">2:04</span></a>
-<div class="body"><a class="title" href="03-inflation/">Inflation</a>
-<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/03-inflation/',this)">Copy link</button></div></div>
-<div class="card"><a class="thumb" href="04-taxes/"><img src="04-taxes/poster.jpg" alt="Taxes" loading="lazy">
-<span class="num">#04</span><span class="play" aria-hidden="true"></span><span class="dur">2:01</span></a>
-<div class="body"><a class="title" href="04-taxes/">Taxes</a>
-<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/04-taxes/',this)">Copy link</button></div></div>
-<div class="card"><a class="thumb" href="05-financial-protection/"><img src="05-financial-protection/poster.jpg" alt="Financial Protection" loading="lazy">
-<span class="num">#05</span><span class="play" aria-hidden="true"></span><span class="dur">1:59</span></a>
-<div class="body"><a class="title" href="05-financial-protection/">Financial Protection</a>
-<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/05-financial-protection/',this)">Copy link</button></div></div>
-<div class="card"><a class="thumb" href="06-what-is-an-iul/"><img src="06-what-is-an-iul/poster.jpg" alt="What is an IUL? Pros and Cons" loading="lazy">
-<span class="num">#06</span><span class="play" aria-hidden="true"></span><span class="dur">2:36</span></a>
-<div class="body"><a class="title" href="06-what-is-an-iul/">What is an IUL? Pros and Cons</a>
-<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/06-what-is-an-iul/',this)">Copy link</button></div></div>
-<div class="card"><a class="thumb" href="07-what-is-a-rollover/"><img src="07-what-is-a-rollover/poster.jpg" alt="What is a Rollover?" loading="lazy">
-<span class="num">#07</span><span class="play" aria-hidden="true"></span><span class="dur">2:16</span></a>
-<div class="body"><a class="title" href="07-what-is-a-rollover/">What is a Rollover?</a>
-<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/07-what-is-a-rollover/',this)">Copy link</button></div></div>
-<div class="card"><a class="thumb" href="08-sequence-of-return-risk/"><img src="08-sequence-of-return-risk/poster.jpg" alt="Sequence of Return Risk" loading="lazy">
-<span class="num">#08</span><span class="play" aria-hidden="true"></span><span class="dur">2:01</span></a>
-<div class="body"><a class="title" href="08-sequence-of-return-risk/">Sequence of Return Risk</a>
-<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/08-sequence-of-return-risk/',this)">Copy link</button></div></div>
-<div class="card"><a class="thumb" href="09-fias-accumulation-vs-income/"><img src="09-fias-accumulation-vs-income/poster.jpg" alt="FIAs: Accumulation vs Income" loading="lazy">
-<span class="num">#09</span><span class="play" aria-hidden="true"></span><span class="dur">2:14</span></a>
-<div class="body"><a class="title" href="09-fias-accumulation-vs-income/">FIAs: Accumulation vs Income</a>
-<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/09-fias-accumulation-vs-income/',this)">Copy link</button></div></div>
-<div class="card"><a class="thumb" href="10-dollar-cost-averaging/"><img src="10-dollar-cost-averaging/poster.jpg" alt="Dollar Cost Averaging" loading="lazy">
-<span class="num">#10</span><span class="play" aria-hidden="true"></span><span class="dur">1:58</span></a>
-<div class="body"><a class="title" href="10-dollar-cost-averaging/">Dollar Cost Averaging</a>
-<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/10-dollar-cost-averaging/',this)">Copy link</button></div></div>
-<div class="card"><a class="thumb" href="11-asset-allocation-and-diversification/"><img src="11-asset-allocation-and-diversification/poster.jpg" alt="Asset Allocation and Diversification" loading="lazy">
-<span class="num">#11</span><span class="play" aria-hidden="true"></span><span class="dur">2:04</span></a>
-<div class="body"><a class="title" href="11-asset-allocation-and-diversification/">Asset Allocation and Diversification</a>
-<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/11-asset-allocation-and-diversification/',this)">Copy link</button></div></div>
-<div class="card"><a class="thumb" href="12-long-term-care-planning-101/"><img src="12-long-term-care-planning-101/poster.jpg" alt="Long Term Care Planning 101" loading="lazy">
-<span class="num">#12</span><span class="play" aria-hidden="true"></span><span class="dur">2:31</span></a>
-<div class="body"><a class="title" href="12-long-term-care-planning-101/">Long Term Care Planning 101</a>
-<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/12-long-term-care-planning-101/',this)">Copy link</button></div></div>
-<div class="card"><a class="thumb" href="13-the-future-of-social-security/"><img src="13-the-future-of-social-security/poster.jpg" alt="The Future of Social Security" loading="lazy">
-<span class="num">#13</span><span class="play" aria-hidden="true"></span><span class="dur">2:02</span></a>
-<div class="body"><a class="title" href="13-the-future-of-social-security/">The Future of Social Security</a>
-<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/13-the-future-of-social-security/',this)">Copy link</button></div></div>
-<div class="card"><a class="thumb" href="14-debt-stacking/"><img src="14-debt-stacking/poster.jpg" alt="Debt Stacking" loading="lazy">
-<span class="num">#14</span><span class="play" aria-hidden="true"></span><span class="dur">2:09</span></a>
-<div class="body"><a class="title" href="14-debt-stacking/">Debt Stacking</a>
-<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/14-debt-stacking/',this)">Copy link</button></div></div>
-<div class="card"><a class="thumb" href="15-estate-planning-principles/"><img src="15-estate-planning-principles/poster.jpg" alt="Estate Planning Principles" loading="lazy">
-<span class="num">#15</span><span class="play" aria-hidden="true"></span><span class="dur">2:14</span></a>
-<div class="body"><a class="title" href="15-estate-planning-principles/">Estate Planning Principles</a>
-<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/15-estate-planning-principles/',this)">Copy link</button></div></div></div>
+<p class="lead">15 short videos on how money works. Each one is under 3 minutes. Tap a title to watch it right here.</p>
+<div class="list"><div class="item" id="v01">
+<button class="vbtn" aria-expanded="false" onclick="toggle(this)"><span class="vnum">01</span><span class="vtitle">Start Saving Early</span><span class="vlen">2:05</span><span class="chev" aria-hidden="true"></span></button>
+<div class="panel" hidden><video controls playsinline preload="none" poster="01-start-saving-early/poster.jpg" data-src="01-start-saving-early/01-start-saving-early.mp4"></video>
+<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/01-start-saving-early/',this)">Copy link to this video</button></div></div>
+<div class="item" id="v02">
+<button class="vbtn" aria-expanded="false" onclick="toggle(this)"><span class="vnum">02</span><span class="vtitle">Compound Interest</span><span class="vlen">2:01</span><span class="chev" aria-hidden="true"></span></button>
+<div class="panel" hidden><video controls playsinline preload="none" poster="02-compound-interest/poster.jpg" data-src="02-compound-interest/02-compound-interest.mp4"></video>
+<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/02-compound-interest/',this)">Copy link to this video</button></div></div>
+<div class="item" id="v03">
+<button class="vbtn" aria-expanded="false" onclick="toggle(this)"><span class="vnum">03</span><span class="vtitle">Inflation</span><span class="vlen">2:04</span><span class="chev" aria-hidden="true"></span></button>
+<div class="panel" hidden><video controls playsinline preload="none" poster="03-inflation/poster.jpg" data-src="03-inflation/03-inflation.mp4"></video>
+<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/03-inflation/',this)">Copy link to this video</button></div></div>
+<div class="item" id="v04">
+<button class="vbtn" aria-expanded="false" onclick="toggle(this)"><span class="vnum">04</span><span class="vtitle">Taxes</span><span class="vlen">2:01</span><span class="chev" aria-hidden="true"></span></button>
+<div class="panel" hidden><video controls playsinline preload="none" poster="04-taxes/poster.jpg" data-src="04-taxes/04-taxes.mp4"></video>
+<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/04-taxes/',this)">Copy link to this video</button></div></div>
+<div class="item" id="v05">
+<button class="vbtn" aria-expanded="false" onclick="toggle(this)"><span class="vnum">05</span><span class="vtitle">Financial Protection</span><span class="vlen">1:59</span><span class="chev" aria-hidden="true"></span></button>
+<div class="panel" hidden><video controls playsinline preload="none" poster="05-financial-protection/poster.jpg" data-src="05-financial-protection/05-financial-protection.mp4"></video>
+<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/05-financial-protection/',this)">Copy link to this video</button></div></div>
+<div class="item" id="v06">
+<button class="vbtn" aria-expanded="false" onclick="toggle(this)"><span class="vnum">06</span><span class="vtitle">What is an IUL? Pros and Cons</span><span class="vlen">2:36</span><span class="chev" aria-hidden="true"></span></button>
+<div class="panel" hidden><video controls playsinline preload="none" poster="06-what-is-an-iul/poster.jpg" data-src="06-what-is-an-iul/06-what-is-an-iul.mp4"></video>
+<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/06-what-is-an-iul/',this)">Copy link to this video</button></div></div>
+<div class="item" id="v07">
+<button class="vbtn" aria-expanded="false" onclick="toggle(this)"><span class="vnum">07</span><span class="vtitle">What is a Rollover?</span><span class="vlen">2:16</span><span class="chev" aria-hidden="true"></span></button>
+<div class="panel" hidden><video controls playsinline preload="none" poster="07-what-is-a-rollover/poster.jpg" data-src="07-what-is-a-rollover/07-what-is-a-rollover.mp4"></video>
+<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/07-what-is-a-rollover/',this)">Copy link to this video</button></div></div>
+<div class="item" id="v08">
+<button class="vbtn" aria-expanded="false" onclick="toggle(this)"><span class="vnum">08</span><span class="vtitle">Sequence of Return Risk</span><span class="vlen">2:01</span><span class="chev" aria-hidden="true"></span></button>
+<div class="panel" hidden><video controls playsinline preload="none" poster="08-sequence-of-return-risk/poster.jpg" data-src="08-sequence-of-return-risk/08-sequence-of-return-risk.mp4"></video>
+<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/08-sequence-of-return-risk/',this)">Copy link to this video</button></div></div>
+<div class="item" id="v09">
+<button class="vbtn" aria-expanded="false" onclick="toggle(this)"><span class="vnum">09</span><span class="vtitle">FIAs: Accumulation vs Income</span><span class="vlen">2:14</span><span class="chev" aria-hidden="true"></span></button>
+<div class="panel" hidden><video controls playsinline preload="none" poster="09-fias-accumulation-vs-income/poster.jpg" data-src="09-fias-accumulation-vs-income/09-fias-accumulation-vs-income.mp4"></video>
+<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/09-fias-accumulation-vs-income/',this)">Copy link to this video</button></div></div>
+<div class="item" id="v10">
+<button class="vbtn" aria-expanded="false" onclick="toggle(this)"><span class="vnum">10</span><span class="vtitle">Dollar Cost Averaging</span><span class="vlen">1:58</span><span class="chev" aria-hidden="true"></span></button>
+<div class="panel" hidden><video controls playsinline preload="none" poster="10-dollar-cost-averaging/poster.jpg" data-src="10-dollar-cost-averaging/10-dollar-cost-averaging.mp4"></video>
+<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/10-dollar-cost-averaging/',this)">Copy link to this video</button></div></div>
+<div class="item" id="v11">
+<button class="vbtn" aria-expanded="false" onclick="toggle(this)"><span class="vnum">11</span><span class="vtitle">Asset Allocation and Diversification</span><span class="vlen">2:04</span><span class="chev" aria-hidden="true"></span></button>
+<div class="panel" hidden><video controls playsinline preload="none" poster="11-asset-allocation-and-diversification/poster.jpg" data-src="11-asset-allocation-and-diversification/11-asset-allocation-and-diversification.mp4"></video>
+<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/11-asset-allocation-and-diversification/',this)">Copy link to this video</button></div></div>
+<div class="item" id="v12">
+<button class="vbtn" aria-expanded="false" onclick="toggle(this)"><span class="vnum">12</span><span class="vtitle">Long Term Care Planning 101</span><span class="vlen">2:31</span><span class="chev" aria-hidden="true"></span></button>
+<div class="panel" hidden><video controls playsinline preload="none" poster="12-long-term-care-planning-101/poster.jpg" data-src="12-long-term-care-planning-101/12-long-term-care-planning-101.mp4"></video>
+<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/12-long-term-care-planning-101/',this)">Copy link to this video</button></div></div>
+<div class="item" id="v13">
+<button class="vbtn" aria-expanded="false" onclick="toggle(this)"><span class="vnum">13</span><span class="vtitle">The Future of Social Security</span><span class="vlen">2:02</span><span class="chev" aria-hidden="true"></span></button>
+<div class="panel" hidden><video controls playsinline preload="none" poster="13-the-future-of-social-security/poster.jpg" data-src="13-the-future-of-social-security/13-the-future-of-social-security.mp4"></video>
+<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/13-the-future-of-social-security/',this)">Copy link to this video</button></div></div>
+<div class="item" id="v14">
+<button class="vbtn" aria-expanded="false" onclick="toggle(this)"><span class="vnum">14</span><span class="vtitle">Debt Stacking</span><span class="vlen">2:09</span><span class="chev" aria-hidden="true"></span></button>
+<div class="panel" hidden><video controls playsinline preload="none" poster="14-debt-stacking/poster.jpg" data-src="14-debt-stacking/14-debt-stacking.mp4"></video>
+<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/14-debt-stacking/',this)">Copy link to this video</button></div></div>
+<div class="item" id="v15">
+<button class="vbtn" aria-expanded="false" onclick="toggle(this)"><span class="vnum">15</span><span class="vtitle">Estate Planning Principles</span><span class="vlen">2:14</span><span class="chev" aria-hidden="true"></span></button>
+<div class="panel" hidden><video controls playsinline preload="none" poster="15-estate-planning-principles/poster.jpg" data-src="15-estate-planning-principles/15-estate-planning-principles.mp4"></video>
+<button class="btn" onclick="copyLink('https://dwightrfm.github.io/money-basics/15-estate-planning-principles/',this)">Copy link to this video</button></div></div></div>
 <footer>For educational and training use. Not financial advice.</footer></div></body></html>
